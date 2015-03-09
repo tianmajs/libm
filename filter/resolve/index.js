@@ -8,6 +8,7 @@ var	url = require('url');
 var	resolve = require('resolve');
 
 var PATTERN_SLASH = /\\/g;
+var PATTERN_PROTOCOL = /^(?:\w+:|\/\/)/;
 var	PATTERN_REQUIRE_JS = /((?:^|[^\.])\brequire\s*\(\s*['"])([^'"]+?)(['"]\s*\))/g;
 var	PATTERN_ASYNC_S = /((?:^|[^\.])\brequire\.async\s*\(\s*['"])([^'"]+?)(['"])/g;
 var	PATTERN_ASYNC_M = /((?:^|[^\.])\brequire\.async\s*\(\s*\[)(.*?)(\])/g;
@@ -50,6 +51,10 @@ function rebase(id, basedir, callback) {
  * @param callback {Function}
  */
 function resolveId(id, basedir, relative, type, callback) {
+	if (PATTERN_PROTOCOL.test(id)) {
+		return callback(null, id);
+	}
+
 	rebase(id, basedir, function (id, basedir) {
 		resolve(id, {
 			moduleDirectory: 'bower_components',
