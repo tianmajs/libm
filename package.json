@@ -1,7 +1,7 @@
 {
 	"name": "libm",
 	"description": "Handle the CommonJS style JS&CSS",
-	"version": "0.9.2",
+	"version": "0.9.3",
 	"author": {
 	"name": "Nanqiao Deng",
 		"email": "nqdeng@gmail.com"

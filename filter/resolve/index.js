@@ -13,7 +13,8 @@ var	PATTERN_ASYNC_S = /((?:^|[^\.])\brequire\.async\s*\(\s*['"])([^'"]+?)(['"])/
 var	PATTERN_ASYNC_M = /((?:^|[^\.])\brequire\.async\s*\(\s*\[)(.*?)(\])/g;
 var	PATTERN_ID = /(['"])([^'"]+?)(\1)/g;
 var	PATTERN_REQUIRE_CSS = /(@require\s+['"])([^'"]+?)(['"]\s*;?)/g;
-var PATTTEN_ABSOLUTE_URL = /(url\s*\(\s*['"]?)(\/[^\/][^'"]+?)(['"]?\s*\))/g;
+var	PATTERN_IMPORT = /(@import\s+['"])([^'"]+?)(['"]\s*;?)/g;
+var	PATTERN_URL = /(url\s*\(\s*['"]?)([^'"]+?)(['"]?\s*\))/g;
 
 /**
  * @param id {string}
@@ -137,8 +138,10 @@ module.exports = function () {
 				source,
 				// @require "id"
 				replace(PATTERN_REQUIRE_CSS, basedir, '.', type),
-				// url("/foo/bar")
-				replace(PATTTEN_ABSOLUTE_URL, basedir, '.', type)
+				// @import "id"
+				replace(PATTERN_IMPORT, basedir, '.', type),
+				// url("foo/bar")
+				replace(PATTERN_URL, basedir, '.', type)
 			], target)
 		} else {
 			next(done);
