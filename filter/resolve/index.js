@@ -24,22 +24,23 @@ var	PATTERN_URL = /(url\s*\(\s*['"]?)([^'"]+?)(['"]?\s*\))/g;
  */
 function rebase(id, basedir, callback) {
 	if (id[0] === '/') {
-		id = '.' + id;
 		(function next(dir) {
 			async.some([
 				path.join(dir, 'package.json'),
 				path.join(dir, 'bower.json')
 			], fs.exists, function (exists) {
-				var parent;
+				var parent, relative;
 				if (exists || (parent = path.join(dir, '..')) === dir) {
-					callback(id, dir);
+                    relative = (path.relative(basedir, dir) || '.')
+                        .replace(PATTERN_SLASH, '/');
+					callback(relative + id);
 				} else {
 					next(parent);
 				}
 			});
 		}(basedir));
 	} else {
-		callback(id, basedir);
+		callback(id);
 	}
 }
 
@@ -55,7 +56,7 @@ function resolveId(id, basedir, relative, type, callback) {
 		return callback(null, id);
 	}
 
-	rebase(id, basedir, function (id, basedir) {
+	rebase(id, basedir, function (id) {
 		resolve(id, {
 			moduleDirectory: 'bower_components',
 			basedir: basedir,
