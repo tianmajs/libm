@@ -29,7 +29,7 @@ module.exports = function () {
 			
 			// Dedupe dependencies
 			if (!cache[req]) {
-				requires.push(re[2]);
+				requires.push(req);
 				cache[req] = true;
 			}
 		}
