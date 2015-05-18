@@ -18,23 +18,21 @@ var TEMPLATE = [
 module.exports = function () {
 	return function (next, done) {
 		var requires = [];
+		var cache = {};
+		var req;
 		var	re;
 			
 		PATTERN_REQUIRE.lastIndex = 0;
 		
 		while (re = PATTERN_REQUIRE.exec(this.data)) {
-			requires.push(re[2]);
-		}
-		
-		// Dedupe dependencies
-		var cache = {};
-		requires = requires.filter(function (req) {
-			if (!cache[req]) {
-				return cache[req] = true;
-			}
+			req = re[2];
 			
-			return false;
-		});
+			// Dedupe dependencies
+			if (!cache[req]) {
+				requires.push(re[2]);
+				cache[req] = true;
+			}
+		}
 		
 		// Generate dependencies code fragment.
 		requires = requires.map(function (id) {
