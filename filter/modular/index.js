@@ -26,6 +26,16 @@ module.exports = function () {
 			requires.push(re[2]);
 		}
 		
+		// Dedupe dependencies
+		var cache = {};
+		requires = requires.filter(function (req) {
+			if (!cache[req]) {
+				return cache[req] = true;
+			}
+			
+			return false;
+		});
+		
 		// Generate dependencies code fragment.
 		requires = requires.map(function (id) {
 			return '"' + id + '"';
