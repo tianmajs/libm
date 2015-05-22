@@ -16,6 +16,7 @@ var	PATTERN_ID = /(['"])([^'"]+?)(\1)/g;
 var	PATTERN_REQUIRE_CSS = /(@require\s+['"])([^'"]+?)(['"]\s*;?)/g;
 var	PATTERN_IMPORT = /(@import\s+['"])([^'"]+?)(['"]\s*;?)/g;
 var	PATTERN_URL = /(url\s*\(\s*['"]?)([^'"]+?)(['"]?\s*\))/g;
+var PATTERN_URL_WITH_PARAMETER = /^(.*?)([#\?].*)?$/;
 
 /**
  * @param id {string}
@@ -56,7 +57,10 @@ function resolveId(id, basedir, relative, type, callback) {
 		return callback(null, id);
 	}
 
-	rebase(id, basedir, function (id) {
+	var parts = id.match(PATTERN_URL_WITH_PARAMETER),
+		parameter = parts[2] || '';
+
+	rebase(parts[1], basedir, function (id) {
 		resolve(id, {
 			moduleDirectory: 'bower_components',
 			basedir: basedir,
@@ -68,7 +72,7 @@ function resolveId(id, basedir, relative, type, callback) {
 		    	relative = path.dirname(relative);
 		    	pathname = path.relative(basedir, pathname);
 		    	id = path.join(relative, pathname).replace(PATTERN_SLASH, '/');
-		    	callback(null, id);
+		    	callback(null, id + parameter);
 		    }
 		});
 	});
@@ -122,6 +126,7 @@ module.exports = function () {
 	
 		function target(err, data) {
 			if (err) {
+				err.message += '(' + relative + ')';
 				done(err);
 			} else {
 				context.data = data;
