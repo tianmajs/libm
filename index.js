@@ -6,10 +6,12 @@ var path = require('path');
 
 module.exports = function (config) {
 	config = config || {};
-	
+
 	var root = path.resolve(config.root || './');
 	var	base = config.base || '';
 	var verb = {};
+	var scope = config.scope || '';
+	var moduledir = config.moduledir || 'node_modules';
 	var pipeline;
 	
 	fs.readdirSync(path.join(__dirname, 'filter')).forEach(function (name) {
@@ -21,13 +23,13 @@ module.exports = function (config) {
 		.is('.js').then
 			.bomless()
 			.nocomment()
-			.resolve()
+			.resolve(scope, moduledir)
 			.modular()
 			.end
 		.is('.css').then
 			.bomless()
 			.nocomment()
-			.resolve()
+			.resolve(scope, moduledir)
 			.require()
 			.absolute()
 			.end
