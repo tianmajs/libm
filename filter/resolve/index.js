@@ -45,8 +45,10 @@ module.exports = function (scope, moduledir) {
 					}
 				});
 			}(basedir));
-		} else {
+		} else if (id[0] === '.') {
 			callback(id);
+		} else {
+			callback(scope + id)
 		}
 	}
 
@@ -65,7 +67,7 @@ module.exports = function (scope, moduledir) {
 		var parts = id.match(PATTERN_URL_WITH_PARAMETER),
 			parameter = parts[2] || '';
 
-		rebase(scope + parts[1], basedir, function (id) {
+		rebase(parts[1], basedir, function (id) {
 			resolve(id, {
 				moduleDirectory: moduledir,
 				basedir: basedir,
