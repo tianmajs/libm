@@ -32,20 +32,11 @@ module.exports = function (config) {
 			.resolve(scope, moduledir)
 			.require()
 			.absolute()
-			.end
-		.is('.tpl').then
-			.bomless()
-			.tplc()
-			.modular()
-			.end
-		.is('.json').then
-			.bomless()			
-			.jsonc()
-			.modular()
 			.end;
 	
-	return function (relative, data, callback) {
+	return function (type, relative, data, callback) {
 		pipeline.run({
+			type: type,
 			relative: relative,
 			data: data
 		}, function (err) {
