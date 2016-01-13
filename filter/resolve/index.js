@@ -47,6 +47,8 @@ module.exports = function (scope, moduledir) {
 			}(basedir));
 		} else if (id[0] === '.') {
 			callback(id);
+		} else if (id[0] === '@') { // Path has scope.
+			callback(id);
 		} else {
 			callback(scope + id)
 		}
@@ -122,11 +124,11 @@ module.exports = function (scope, moduledir) {
 		var type = this.type;
 		var data = this.data;
 		var context = this;
-	
+
 		function source(callback) {
 			callback(null, data);
 		}
-	
+
 		function target(err, data) {
 			if (err) {
 				err.message += '(' + relative + ')';
@@ -136,7 +138,7 @@ module.exports = function (scope, moduledir) {
 				next(done);
 			}
 		}
-	
+
 		if (type === '.js') {
 			async.waterfall([
 				source,
